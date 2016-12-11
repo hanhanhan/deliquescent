@@ -101,6 +101,9 @@ function initializeArray() {
 
 //draw grid function
 function draw(i,j) {
+  context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
+  context.beginPath();
+
   var p1 = parts[i][j];
   var p2 = parts[i][j + 1];
   var p3 = parts[i + 1][j + 1];
@@ -119,6 +122,8 @@ function draw(i,j) {
     context.moveTo(p3.x, p3.y);
     context.lineTo(p2.x, p2.y);
   }
+
+  context.stroke();
 }
 
 function resize() {
@@ -150,9 +155,6 @@ window.onload = function() {
     //wipe canvas
     context.fillStyle = "hsla(0, 5%, 5%, .1)";
     context.fillRect(0, 0, _x, _y);
-
-    context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
-    context.beginPath();
     ŭ -= .5;
 
     //looping through array of points
@@ -163,7 +165,7 @@ window.onload = function() {
         draw(i,j);
       }
     }
-    context.stroke();
+ //   context.stroke();
     window.requestAnimFrame(run);
   }
   resize();
