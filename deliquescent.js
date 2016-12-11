@@ -17,8 +17,7 @@ var w = _x / gnum; //grid sq width
 var h = _y / gnum; //grid sq height
 
 var parts; //particles 
-var P1 = 0.0005; //point one
-var P2 = 0.01; //point two
+var P = 0.01; //Multiplier for offset between resting position and pulled point
 var n = 0.98; //n value for later
 var n_vel = 0.02; //velocity
 var ŭ = 0; //color update
@@ -47,28 +46,28 @@ Part.prototype.frame = function() {
     return;
   }
 
-  var ax = 0; //angle x
-  var ay = 0; //angle y
   //off_dx, off_dy = offset distance x, y
   var off_dx = this.ind_x * w - this.x;
   var off_dy = this.ind_y * h - this.y;
-  ax = P1 * off_dx;
-  ay = P1 * off_dy;
 
-  ax -= P2 * (this.x - parts[this.ind_x - 1][this.ind_y].x);
-  ay -= P2 * (this.y - parts[this.ind_x - 1][this.ind_y].y);
+  var ax = 0;
+  var ay = 0;
 
-  ax -= P2 * (this.x - parts[this.ind_x + 1][this.ind_y].x);
-  ay -= P2 * (this.y - parts[this.ind_x + 1][this.ind_y].y);
+  ax -= this.x - parts[this.ind_x - 1][this.ind_y].x;
+  ay -= this.y - parts[this.ind_x - 1][this.ind_y].y;
 
-  ax -= P2 * (this.x - parts[this.ind_x][this.ind_y - 1].x);
-  ay -= P2 * (this.y - parts[this.ind_x][this.ind_y - 1].y);
+  ax -= this.x - parts[this.ind_x + 1][this.ind_y].x;
+  ay -= this.y - parts[this.ind_x + 1][this.ind_y].y;
 
-  ax -= P2 * (this.x - parts[this.ind_x][this.ind_y + 1].x);
-  ay -= P2 * (this.y - parts[this.ind_x][this.ind_y + 1].y);
+  ax -= this.x - parts[this.ind_x][this.ind_y - 1].x;
+  ay -= this.y - parts[this.ind_x][this.ind_y - 1].y;
 
-  this.vx += (ax - this.vx * n_vel);
-  this.vy += (ay - this.vy * n_vel);
+  ax -= this.x - parts[this.ind_x][this.ind_y + 1].x;
+  ay -= this.y - parts[this.ind_x][this.ind_y + 1].y;
+
+  //decaying damping
+  this.vx += P * ax - this.vx * n_vel;
+  this.vy += P * ay - this.vy * n_vel;
 
   this.x += this.vx * n;
   this.y += this.vy * n;
