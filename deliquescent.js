@@ -21,9 +21,9 @@ var P2 = 0.01; //point two
 var n = 0.98; //n value for later
 var n_vel = 0.02; //velocity
 var ŭ = 0; //color update
-var msX = 0; //mouse x
-var msY = 0; //mouse y
-var msdn = false; //mouse down flag
+var mouseX = 0; //mouse x
+var mouseY = 0; //mouse y
+var mousedn = false; //mouse down flag
 //canvas
 var canvas = document.getElementById('canv');
 var context = canvas.getContext('2d');
@@ -68,9 +68,9 @@ Part.prototype.frame = function() {
 
   this.x += this.vx * n;
   this.y += this.vy * n;
-  if (msdn) {
-    var dx = this.x - msX;
-    var dy = this.y - msY;
+  if (mousedn) {
+    var dx = this.x - mouseX;
+    var dy = this.y - mouseY;
     var ɋ = Math.sqrt(dx * dx + dy * dy);
     if (ɋ < 50) {
       ɋ = ɋ < 10 ? 10 : ɋ;
@@ -133,22 +133,12 @@ function resize() {
   }
 }
 
-document.addEventListener('mousemove', MSMV, false);
-document.addEventListener('mousedown', MSDN, false);
-document.addEventListener('mouseup', MSUP, false);
-
-function MSDN(e) {
-  msdn = true;
-}
-
-function MSUP(e) {
-  msdn = false;
-}
-
-function MSMV(e) {
-  var rect = e.target.getBoundingClientRect();
-  msX = e.clientX - rect.left;
-  msY = e.clientY - rect.top;
+canvas.onmousedown = () => mousedn = true;
+canvas.onmouseup = () => mousedn = false;
+canvas.onmousemove = function MSMV(e) {
+  var rect = canvas.getBoundingClientRect();
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
 }
 
 go();
@@ -163,7 +153,7 @@ window.onload = function() {
 
     context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
     context.beginPath();
-     ŭ -= .5;
+    ŭ -= .5;
     //looping streamlined
     for (var i = 0; i < gnum - 1; i++) {
       for (var j = 0; j < gnum - 1; j++) {
@@ -171,12 +161,7 @@ window.onload = function() {
         var p = parts[i][j];
         p.frame();
     
-        draw(i,j);// function contents
-        // var p1 = parts[i][j];
-        // var p2 = parts[i][j + 1];
-        // var p3 = parts[i + 1][j + 1];
-        // var p4 = parts[i + 1][j];
-        //draw_each(p1, p2, p3, p4);
+        draw(i,j);
       }
     }
     context.stroke();
