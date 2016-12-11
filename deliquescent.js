@@ -1,6 +1,7 @@
 //http://codepen.io/tmrDevelops/pen/OPZKNd
 //Tiffany Rayside
 //Deliquescent
+//modified by hanhanhan
 
 window.requestAnimFrame = (function(callback) {
   return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
@@ -14,9 +15,7 @@ var _x = 2265; //x width (canvas width)
 var _y = 1465; //y height (canvas height)
 var w = _x / gnum; //grid sq width
 var h = _y / gnum; //grid sq height
-var $; //context
 var parts; //particles 
-var frm = 0; //value from
 var P1 = 0.0005; //point one
 var P2 = 0.01; //point two
 var n = 0.98; //n value for later
@@ -25,6 +24,9 @@ var ŭ = 0; //color update
 var msX = 0; //mouse x
 var msY = 0; //mouse y
 var msdn = false; //mouse down flag
+//canvas
+var canvas = document.getElementById('canv');
+var context = canvas.getContext('2d');
 
 var Part = function() {
   this.x = 0; //x pos
@@ -94,7 +96,6 @@ function go() {
   }
   //move particles function
 function mv_part() {
-
     for (var i = 0; i < gnum; i++) {
       for (var j = 0; j < gnum; j++) {
         var p = parts[i][j];
@@ -104,8 +105,8 @@ function mv_part() {
   }
   //draw grid function
 function draw() {
-    $.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
-    $.beginPath();
+    context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
+    context.beginPath();
     ŭ -= .5;
     for (var i = 0; i < gnum - 1; i += 1) {
       for (var j = 0; j < gnum - 1; j += 1) {
@@ -116,56 +117,45 @@ function draw() {
         draw_each(p1, p2, p3, p4);
       }
     }
-    $.stroke();
+    context.stroke();
 
   }
   //draw each in array
 function draw_each(p1, p2, p3, p4) {
 
-    $.moveTo(p1.x, p1.y);
-    $.lineTo(p2.x, p2.y);
-    $.moveTo(p1.x, p1.y);
-    $.lineTo(p4.x, p4.y);
+    context.moveTo(p1.x, p1.y);
+    context.lineTo(p2.x, p2.y);
+    context.moveTo(p1.x, p1.y);
+    context.lineTo(p4.x, p4.y);
 
     if (p1.ind_x == gnum - 2) {
-      $.moveTo(p3.x, p3.y);
-      $.lineTo(p4.x, p4.y);
+      context.moveTo(p3.x, p3.y);
+      context.lineTo(p4.x, p4.y);
     }
     if (p1.ind_y == gnum - 2) {
-      $.moveTo(p3.x, p3.y);
-      $.lineTo(p2.x, p2.y);
+      context.moveTo(p3.x, p3.y);
+      context.lineTo(p2.x, p2.y);
     }
   }
   //call functions to run
 function calls() {
-    $.fillStyle = "hsla(0, 5%, 5%, .1)";
-    $.fillRect(0, 0, _x, _y);
+    context.fillStyle = "hsla(0, 5%, 5%, .1)";
+    context.fillRect(0, 0, _x, _y);
 
     mv_part();
     draw();
-    frm++;
   }
-  //create wave effect 
-function wave(x, y) {
 
-  var wv = Math.sin(x / wv * xw);
-  var wave = Math.sin(0.2 * w * frm + y * yw) * w;
-
-  return wave;
-}
-
-var c = document.getElementById('canv');
-var $ = c.getContext('2d');
-$.fillStyle = "hsla(0, 5%, 5%, .1)";
-$.fillRect(0, 0, _x, _y);
+context.fillStyle = "hsla(0, 5%, 5%, .1)";
+context.fillRect(0, 0, _x, _y);
 
 function resize() {
-  if (c.width < window.innerWidth) {
-    c.width = window.innerWidth;
+  if (canvas.width < window.innerWidth) {
+    canvas.width = window.innerWidth;
   }
 
-  if (c.height < window.innerHeight) {
-    c.height = window.innerHeight;
+  if (canvas.height < window.innerHeight) {
+    canvas.height = window.innerHeight;
   }
 }
 window.requestAnimFrame(go);
