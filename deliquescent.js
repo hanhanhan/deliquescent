@@ -99,22 +99,14 @@ function mv_part() {
     
   }
   //draw grid function
-function draw() {
-    context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
-    context.beginPath();
-    ŭ -= .5;
-    for (var i = 0; i < gnum - 1; i += 1) {
-      for (var j = 0; j < gnum - 1; j += 1) {
-        var p1 = parts[i][j];
-        var p2 = parts[i][j + 1];
-        var p3 = parts[i + 1][j + 1];
-        var p4 = parts[i + 1][j];
-        draw_each(p1, p2, p3, p4);
-      }
-    }
-    context.stroke();
+function draw(i,j) {
+  var p1 = parts[i][j];
+  var p2 = parts[i][j + 1];
+  var p3 = parts[i + 1][j + 1];
+  var p4 = parts[i + 1][j];
+  draw_each(p1, p2, p3, p4);
+}
 
-  }
   //draw each in array
 function draw_each(p1, p2, p3, p4) {
 
@@ -132,10 +124,6 @@ function draw_each(p1, p2, p3, p4) {
       context.lineTo(p2.x, p2.y);
     }
   }
-  //call functions to run
-function calls() {
-
-  }
 
 context.fillStyle = "hsla(0, 5%, 5%, .1)";
 context.fillRect(0, 0, _x, _y);
@@ -149,7 +137,6 @@ function resize() {
     canvas.height = window.innerHeight;
   }
 }
-
 
 document.addEventListener('mousemove', MSMV, false);
 document.addEventListener('mousedown', MSDN, false);
@@ -189,12 +176,12 @@ window.onload = function() {
         var p = parts[i][j];
         p.frame();
     
-        //draw() function contents
-        var p1 = parts[i][j];
-        var p2 = parts[i][j + 1];
-        var p3 = parts[i + 1][j + 1];
-        var p4 = parts[i + 1][j];
-        draw_each(p1, p2, p3, p4);
+        draw(i,j);// function contents
+        // var p1 = parts[i][j];
+        // var p2 = parts[i][j + 1];
+        // var p3 = parts[i + 1][j + 1];
+        // var p4 = parts[i + 1][j];
+        //draw_each(p1, p2, p3, p4);
       }
     }
     context.stroke();
