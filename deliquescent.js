@@ -15,6 +15,7 @@ var _x = 2265; //x width (canvas width)
 var _y = 1465; //y height (canvas height)
 var w = _x / gnum; //grid sq width
 var h = _y / gnum; //grid sq height
+
 var parts; //particles 
 var P1 = 0.0005; //point one
 var P2 = 0.01; //point two
@@ -23,7 +24,7 @@ var n_vel = 0.02; //velocity
 var ŭ = 0; //color update
 var mouseX = 0; //mouse x
 var mouseY = 0; //mouse y
-var mousedn = false; //mouse down flag
+var mouseDown = false; //mouse down flag
 //canvas
 var canvas = document.getElementById('canv');
 var context = canvas.getContext('2d');
@@ -40,6 +41,9 @@ var Part = function() {
 Part.prototype.frame = function() {
 
   if (this.ind_x == 0 || this.ind_x == gnum - 1 || this.ind_y == 0 || this.ind_y == gnum - 1) {
+    //pin edges for stability
+    this.x = this.ind_x * w;
+    this.y = this.ind_y * h;  
     return;
   }
 
@@ -68,7 +72,8 @@ Part.prototype.frame = function() {
 
   this.x += this.vx * n;
   this.y += this.vy * n;
-  if (mousedn) {
+
+  if (mouseDown) {
     var dx = this.x - mouseX;
     var dy = this.y - mouseY;
     var ɋ = Math.sqrt(dx * dx + dy * dy);
@@ -133,8 +138,10 @@ function resize() {
   }
 }
 
-canvas.onmousedown = () => mousedn = true;
-canvas.onmouseup = () => mousedn = false;
+//mouse
+canvas.onmousedown = () => mouseDown = true;
+canvas.onmouseup = () => mouseDown = false;
+
 canvas.onmousemove = function MSMV(e) {
   var rect = canvas.getBoundingClientRect();
   mouseX = e.clientX - rect.left;
@@ -154,18 +161,16 @@ window.onload = function() {
     context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
     context.beginPath();
     ŭ -= .5;
-    //looping streamlined
+
+    //looping through array of points
     for (var i = 0; i < gnum - 1; i++) {
       for (var j = 0; j < gnum - 1; j++) {
-        //mv_part() function contents
         var p = parts[i][j];
         p.frame();
-    
         draw(i,j);
       }
     }
     context.stroke();
-
     window.requestAnimFrame(run);
   }
   resize();
