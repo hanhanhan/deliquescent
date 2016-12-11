@@ -104,26 +104,21 @@ function draw(i,j) {
   var p2 = parts[i][j + 1];
   var p3 = parts[i + 1][j + 1];
   var p4 = parts[i + 1][j];
-  draw_each(p1, p2, p3, p4);
-}
 
-  //draw each in array
-function draw_each(p1, p2, p3, p4) {
+  context.moveTo(p1.x, p1.y);
+  context.lineTo(p2.x, p2.y);
+  context.moveTo(p1.x, p1.y);
+  context.lineTo(p4.x, p4.y);
 
-    context.moveTo(p1.x, p1.y);
-    context.lineTo(p2.x, p2.y);
-    context.moveTo(p1.x, p1.y);
+  if (p1.ind_x == gnum - 2) {
+    context.moveTo(p3.x, p3.y);
     context.lineTo(p4.x, p4.y);
-
-    if (p1.ind_x == gnum - 2) {
-      context.moveTo(p3.x, p3.y);
-      context.lineTo(p4.x, p4.y);
-    }
-    if (p1.ind_y == gnum - 2) {
-      context.moveTo(p3.x, p3.y);
-      context.lineTo(p2.x, p2.y);
-    }
   }
+  if (p1.ind_y == gnum - 2) {
+    context.moveTo(p3.x, p3.y);
+    context.lineTo(p2.x, p2.y);
+  }
+}
 
 context.fillStyle = "hsla(0, 5%, 5%, .1)";
 context.fillRect(0, 0, _x, _y);
