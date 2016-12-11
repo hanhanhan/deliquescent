@@ -96,12 +96,7 @@ function go() {
   }
   //move particles function
 function mv_part() {
-    for (var i = 0; i < gnum; i++) {
-      for (var j = 0; j < gnum; j++) {
-        var p = parts[i][j];
-        p.frame();
-      }
-    }
+    
   }
   //draw grid function
 function draw() {
@@ -183,8 +178,30 @@ window.onload = function() {
     //wipe canvas
     context.fillStyle = "hsla(0, 5%, 5%, .1)";
     context.fillRect(0, 0, _x, _y);
-    mv_part();
-    draw();
+
+    //mv_part() function contents
+    for (var i = 0; i < gnum; i++) {
+      for (var j = 0; j < gnum; j++) {
+        var p = parts[i][j];
+        p.frame();
+      }
+    }
+    
+    //draw() function contents
+    context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
+    context.beginPath();
+    ŭ -= .5;
+    for (var i = 0; i < gnum - 1; i += 1) {
+      for (var j = 0; j < gnum - 1; j += 1) {
+        var p1 = parts[i][j];
+        var p2 = parts[i][j + 1];
+        var p3 = parts[i + 1][j + 1];
+        var p4 = parts[i + 1][j];
+        draw_each(p1, p2, p3, p4);
+      }
+    }
+    context.stroke();
+
     window.requestAnimFrame(run);
   }
   resize();
