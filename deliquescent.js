@@ -139,11 +139,7 @@ function draw_each(p1, p2, p3, p4) {
   }
   //call functions to run
 function calls() {
-    context.fillStyle = "hsla(0, 5%, 5%, .1)";
-    context.fillRect(0, 0, _x, _y);
 
-    mv_part();
-    draw();
   }
 
 context.fillStyle = "hsla(0, 5%, 5%, .1)";
@@ -158,7 +154,7 @@ function resize() {
     canvas.height = window.innerHeight;
   }
 }
-window.requestAnimFrame(go);
+
 
 document.addEventListener('mousemove', MSMV, false);
 document.addEventListener('mousedown', MSDN, false);
@@ -177,12 +173,19 @@ function MSMV(e) {
   msX = e.clientX - rect.left;
   msY = e.clientY - rect.top;
 }
+
+go();
+
 window.onload = function() {
   run();
 
   function run() {
-    window.requestAnimFrame(calls);
-    window.requestAnimFrame(run, 33);
+    //wipe canvas
+    context.fillStyle = "hsla(0, 5%, 5%, .1)";
+    context.fillRect(0, 0, _x, _y);
+    mv_part();
+    draw();
+    window.requestAnimFrame(run);
   }
   resize();
 };
