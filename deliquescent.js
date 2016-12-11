@@ -85,7 +85,7 @@ Part.prototype.frame = function() {
   }
 };
 
-function go() {
+function initializeArray() {
     parts = []; //particle array
     for (var i = 0; i < gnum; i++) {
       parts.push([]);
@@ -99,11 +99,8 @@ function go() {
       }
     }
   }
-  //move particles function
-function mv_part() {
-    
-  }
-  //draw grid function
+
+//draw grid function
 function draw(i,j) {
   var p1 = parts[i][j];
   var p2 = parts[i][j + 1];
@@ -125,9 +122,6 @@ function draw(i,j) {
   }
 }
 
-context.fillStyle = "hsla(0, 5%, 5%, .1)";
-context.fillRect(0, 0, _x, _y);
-
 function resize() {
   if (canvas.width < window.innerWidth) {
     canvas.width = window.innerWidth;
@@ -148,7 +142,7 @@ canvas.onmousemove = function MSMV(e) {
   mouseY = e.clientY - rect.top;
 }
 
-go();
+initializeArray();
 
 window.onload = function() {
   run();
