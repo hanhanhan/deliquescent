@@ -179,20 +179,17 @@ window.onload = function() {
     context.fillStyle = "hsla(0, 5%, 5%, .1)";
     context.fillRect(0, 0, _x, _y);
 
-    //mv_part() function contents
-    for (var i = 0; i < gnum; i++) {
-      for (var j = 0; j < gnum; j++) {
-        var p = parts[i][j];
-        p.frame();
-      }
-    }
-    
-    //draw() function contents
     context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
     context.beginPath();
-    ŭ -= .5;
-    for (var i = 0; i < gnum - 1; i += 1) {
-      for (var j = 0; j < gnum - 1; j += 1) {
+     ŭ -= .5;
+    //looping streamlined
+    for (var i = 0; i < gnum - 1; i++) {
+      for (var j = 0; j < gnum - 1; j++) {
+        //mv_part() function contents
+        var p = parts[i][j];
+        p.frame();
+    
+        //draw() function contents
         var p1 = parts[i][j];
         var p2 = parts[i][j + 1];
         var p3 = parts[i + 1][j + 1];
