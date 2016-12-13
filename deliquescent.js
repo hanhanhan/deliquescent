@@ -10,16 +10,18 @@ window.requestAnimFrame = (function(callback) {
     };
 })();
 
-var gnum = 90; //num grids / frame
-var _x = 2265; //x width (canvas width)
-var _y = 1465; //y height (canvas height)
-var w = _x / gnum; //grid sq width
-var h = _y / gnum; //grid sq height
+const gnum = 60; //num grids / frame
+const _x = 2265; //x width (canvas width)
+const _y = 1465; //y height (canvas height)
+const w = _x / gnum; //grid sq width
+const h = _y / gnum; //grid sq height
+
+const P = 0.01; //Multiplier for offset between resting position and pulled point
+const n = 0.98; //n value for later
+const n_vel = 0.02; //velocity
+const C = 5; //Multiplier for color style as function of displacement
 
 var parts; //particles 
-var P = 0.01; //Multiplier for offset between resting position and pulled point
-var n = 0.98; //n value for later
-var n_vel = 0.02; //velocity
 var ŭ = 0; //color update
 var mouseX = 0; //mouse x
 var mouseY = 0; //mouse y
@@ -35,9 +37,10 @@ var Part = function() {
   this.vy = 0; //velocity y
   this.ind_x = 0; //index x
   this.ind_y = 0; //index y
+  this.displacement = 0;
 };
 
-Part.prototype.frame = function() {
+Part.prototype.frame = function frame() {
 
   if (this.ind_x == 0 || this.ind_x == gnum - 1 || this.ind_y == 0 || this.ind_y == gnum - 1) {
     //pin edges for stability
@@ -49,6 +52,7 @@ Part.prototype.frame = function() {
   //off_dx, off_dy = offset distance x, y
   var off_dx = this.ind_x * w - this.x;
   var off_dy = this.ind_y * h - this.y;
+  this.displacement = Math.sqrt(off_dx * off_dx + off_dy * off_dy);
 
   var ax = 0;
   var ay = 0;
@@ -84,6 +88,17 @@ Part.prototype.frame = function() {
   }
 };
 
+Part.prototype.displacementStyle = function displacementStyle(){
+  var hue = ŭ + C * this.displacement;
+  var alpha_offset = 0.5;
+  var alpha = alpha_offset + C * this.displacement * this.displacement;
+  alpha = alpha > 1 ? 1 : alpha;
+
+  context.strokeStyle = 'hsla(' + hue + ', 100%, 80%, ' + alpha +')';
+  context.lineWidth = 1 + this.displacement * 0.05;
+  context.beginPath();
+}
+
 function initializeArray() {
     parts = []; //particle array
     for (var i = 0; i < gnum; i++) {
@@ -101,30 +116,27 @@ function initializeArray() {
 
 //draw grid function
 function draw(i,j) {
-  context.strokeStyle = "hsla(" + (ŭ % 360) + ",100%,50%,1)";
-  context.beginPath();
-
   var p1 = parts[i][j];
-  var p2 = parts[i][j + 1];
+  var p2 = parts[i][j + 1]; //across row
   var p3 = parts[i + 1][j + 1];
-  var p4 = parts[i + 1][j];
+  var p4 = parts[i + 1][j]; //down column
 
   context.moveTo(p1.x, p1.y);
-  context.lineTo(p2.x, p2.y);
+  context.lineTo(p2.x, p2.y); //line to right
   context.moveTo(p1.x, p1.y);
-  context.lineTo(p4.x, p4.y);
+  context.lineTo(p4.x, p4.y); //line down
 
-  if (p1.ind_x == gnum - 2) {
-    context.moveTo(p3.x, p3.y);
-    context.lineTo(p4.x, p4.y);
-  }
-  if (p1.ind_y == gnum - 2) {
-    context.moveTo(p3.x, p3.y);
-    context.lineTo(p2.x, p2.y);
-  }
-
-  context.stroke();
+  // if (p1.ind_x == gnum - 2) {
+  //   context.moveTo(p3.x, p3.y); //bottom right
+  //   context.lineTo(p4.x, p4.y); //to left
+  // }
+  // if (p1.ind_y == gnum - 2) {
+  //   context.moveTo(p3.x, p3.y); //bottom right
+  //   context.lineTo(p2.x, p2.y); // to up
+  // }  
 }
+
+
 
 function resize() {
   if (canvas.width < window.innerWidth) {
@@ -155,14 +167,18 @@ window.onload = function() {
     //wipe canvas
     context.fillStyle = "hsla(0, 5%, 5%, .1)";
     context.fillRect(0, 0, _x, _y);
-    ŭ -= .5;
+    ŭ -= 0.5;
 
     //looping through array of points
     for (var i = 0; i < gnum - 1; i++) {
       for (var j = 0; j < gnum - 1; j++) {
         var p = parts[i][j];
+        p
+        context.beginPath();
         p.frame();
+        p.displacementStyle();
         draw(i,j);
+        context.stroke();
       }
     }
  //   context.stroke();
