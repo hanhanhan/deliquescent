@@ -114,29 +114,17 @@ function initializeArray() {
     }
   }
 
-//draw grid function
+//draw grid 
 function draw(i,j) {
-  var p1 = parts[i][j];
-  var p2 = parts[i][j + 1]; //across row
-  var p3 = parts[i + 1][j + 1];
-  var p4 = parts[i + 1][j]; //down column
+  var p = parts[i][j];
+  var pAcross = parts[i][j + 1]; //across row
+  var pDown = parts[i + 1][j]; //down column
 
-  context.moveTo(p1.x, p1.y);
-  context.lineTo(p2.x, p2.y); //line to right
-  context.moveTo(p1.x, p1.y);
-  context.lineTo(p4.x, p4.y); //line down
-
-  // if (p1.ind_x == gnum - 2) {
-  //   context.moveTo(p3.x, p3.y); //bottom right
-  //   context.lineTo(p4.x, p4.y); //to left
-  // }
-  // if (p1.ind_y == gnum - 2) {
-  //   context.moveTo(p3.x, p3.y); //bottom right
-  //   context.lineTo(p2.x, p2.y); // to up
-  // }  
+  context.moveTo(p.x, p.y);
+  context.lineTo(pAcross.x, pAcross.y); //line to right
+  context.moveTo(p.x, p.y);
+  context.lineTo(pDown.x, pDown.y); //line down  
 }
-
-
 
 function resize() {
   if (canvas.width < window.innerWidth) {
@@ -173,7 +161,6 @@ window.onload = function() {
     for (var i = 0; i < gnum - 1; i++) {
       for (var j = 0; j < gnum - 1; j++) {
         var p = parts[i][j];
-        p
         context.beginPath();
         p.frame();
         p.displacementStyle();
