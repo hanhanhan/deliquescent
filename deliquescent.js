@@ -10,25 +10,29 @@ window.requestAnimFrame = (function(callback) {
     };
 })();
 
-const gnum = 60; //num grids / frame
-const _x = 2265; //x width (canvas width)
-const _y = 1465; //y height (canvas height)
-const w = _x / gnum; //grid sq width
-const h = _y / gnum; //grid sq height
+//canvas
+var canvas = document.getElementById('canv');
+var context = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+var _x = canvas.width; //x width (canvas width)
+var _y = canvas.height; //y height (canvas height)
+const w = 30; //grid sq width
+const h = 30; //grid sq height
+var rows = canvas.height/30; //number of rows
+var columns = canvas.width/30; //number of columns
 
 const P = 0.01; //Multiplier for offset between resting position and pulled point
 const n = 0.98; //n value for later
 const n_vel = 0.02; //velocity
-const C = 5; //Multiplier for color style as function of displacement
+const C = 5; //Multiplier for line style as function of displacement
 
 var parts; //particles 
 var ŭ = 0; //color update
 var mouseX = 0; //mouse x
 var mouseY = 0; //mouse y
 var mouseDown = false; //mouse down flag
-//canvas
-var canvas = document.getElementById('canv');
-var context = canvas.getContext('2d');
 
 var Part = function() {
   this.x = 0; //x pos
@@ -42,7 +46,7 @@ var Part = function() {
 
 Part.prototype.frame = function frame() {
 
-  if (this.ind_x == 0 || this.ind_x == gnum - 1 || this.ind_y == 0 || this.ind_y == gnum - 1) {
+  if (this.ind_x == 0 || this.ind_x == columns - 1 || this.ind_y == 0 || this.ind_y == rows - 1) {
     //pin edges for stability
     this.x = this.ind_x * w;
     this.y = this.ind_y * h;  
@@ -101,9 +105,9 @@ Part.prototype.displacementStyle = function displacementStyle(){
 
 function initializeArray() {
     parts = []; //particle array
-    for (var i = 0; i < gnum; i++) {
+    for (var i = 0; i < columns; i++) {
       parts.push([]);
-      for (var j = 0; j < gnum; j++) {
+      for (var j = 0; j < rows; j++) {
         var p = new Part();
         p.ind_x = i;
         p.ind_y = j;
@@ -127,13 +131,8 @@ function draw(i,j) {
 }
 
 function resize() {
-  if (canvas.width < window.innerWidth) {
-    canvas.width = window.innerWidth;
-  }
-
-  if (canvas.height < window.innerHeight) {
-    canvas.height = window.innerHeight;
-  }
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 
 //mouse
@@ -146,6 +145,8 @@ canvas.onmousemove = function MSMV(e) {
   mouseY = e.clientY - rect.top;
 }
 
+window.onresize = resize();
+
 initializeArray();
 
 window.onload = function() {
@@ -154,12 +155,12 @@ window.onload = function() {
   function run() {
     //wipe canvas
     context.fillStyle = "hsla(0, 5%, 5%, .1)";
-    context.fillRect(0, 0, _x, _y);
+    context.fillRect(0, 0, canvas.width, canvas.height);
     ŭ -= 0.5;
 
     //looping through array of points
-    for (var i = 0; i < gnum - 1; i++) {
-      for (var j = 0; j < gnum - 1; j++) {
+    for (var i = 0; i < columns - 1; i++) {
+      for (var j = 0; j < rows - 1; j++) {
         var p = parts[i][j];
         context.beginPath();
         p.frame();
@@ -171,5 +172,4 @@ window.onload = function() {
  //   context.stroke();
     window.requestAnimFrame(run);
   }
-  resize();
 };
