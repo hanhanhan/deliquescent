@@ -16,12 +16,12 @@ var context = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-var _x = canvas.width; //x width (canvas width)
-var _y = canvas.height; //y height (canvas height)
+ //y height (canvas height)
 const w = 30; //grid sq width
 const h = 30; //grid sq height
-var rows = canvas.height/30; //number of rows
-var columns = canvas.width/30; //number of columns
+
+var rows = canvas.height/w; //number of rows
+var columns = canvas.width/w; //number of columns
 
 const P = 0.01; //Multiplier for offset between resting position and pulled point
 const n = 0.98; //n value for later
@@ -42,6 +42,7 @@ var Part = function() {
   this.ind_x = 0; //index x
   this.ind_y = 0; //index y
   this.displacement = 0;
+  this.off_dx = 0;
 };
 
 Part.prototype.frame = function frame() {
@@ -56,6 +57,8 @@ Part.prototype.frame = function frame() {
   //off_dx, off_dy = offset distance x, y
   var off_dx = this.ind_x * w - this.x;
   var off_dy = this.ind_y * h - this.y;
+
+  this.off_dx = off_dx;
   this.displacement = Math.sqrt(off_dx * off_dx + off_dy * off_dy);
 
   var ax = 0;
@@ -94,12 +97,13 @@ Part.prototype.frame = function frame() {
 
 Part.prototype.displacementStyle = function displacementStyle(){
   var hue = ŭ + C * this.displacement;
-  var alpha_offset = 0.5;
-  var alpha = alpha_offset + C * this.displacement * this.displacement;
+  var alpha_offset = 0.6;
+  var alpha = alpha_offset + this.off_dx;
   alpha = alpha > 1 ? 1 : alpha;
+  alpha = alpha < 0.2 ? 0.2 : alpha;
 
   context.strokeStyle = 'hsla(' + hue + ', 100%, 80%, ' + alpha +')';
-  context.lineWidth = 1 + this.displacement * 0.05;
+  context.lineWidth = 1 + this.displacement * 0.03;
   context.beginPath();
 }
 
@@ -125,9 +129,9 @@ function draw(i,j) {
   var pDown = parts[i + 1][j]; //down column
 
   context.moveTo(p.x, p.y);
-  context.lineTo(pAcross.x, pAcross.y); //line to right
+  context.lineTo(pAcross.x, pAcross.y); 
   context.moveTo(p.x, p.y);
-  context.lineTo(pDown.x, pDown.y); //line down  
+  context.lineTo(pDown.x, pDown.y); 
 }
 
 function resize() {
@@ -169,7 +173,6 @@ window.onload = function() {
         context.stroke();
       }
     }
- //   context.stroke();
     window.requestAnimFrame(run);
   }
 };
