@@ -21,9 +21,9 @@ const h = 15; //grid sq height
 var rows = canvas.height/w; //number of rows
 var columns = canvas.width/w; //number of columns
 
-const K_amplificationX = 0.015; //X axis amplification - multiplier for difference between neighbors and pulled point
+const K_pullX = 0.015; //X axis pull scaling constant - multiplier for difference between neighbors and pulled point
 const K_decayX = 0.03; //X axis decay
-const K_amplificationY = 0.015; //Y axis amplification - multiplier for difference between neighbors and pulled point
+const K_pullY = 0.015; //Y axis pull - multiplier for difference between neighbors and pulled point
 const K_decayY = 0.03; //Y axis decay
 
 var parts; //particles aka grid intersections
@@ -86,9 +86,9 @@ Part.prototype.frame = function frame() {
   xPull +=  parts[this.ind_x][this.ind_y + 1].x - this.x;
   yPull +=  parts[this.ind_x][this.ind_y + 1].y - this.y;
 
-  //amplification * net pull - decaying damping
-  this.xShift += K_amplificationX * xPull - K_decayX * this.xShift;
-  this.yShift += K_amplificationY * yPull - K_decayY * this.yShift;
+  //scaling constant * net pull - decaying damping
+  this.xShift += K_pullX * xPull - K_decayX * this.xShift;
+  this.yShift += K_pullY * yPull - K_decayY * this.yShift;
 
   // move the particle!
   this.x += this.xShift;
