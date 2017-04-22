@@ -15,8 +15,8 @@ canvas.height = window.innerHeight;
 var xShiftArray = [];
 
  //y height (canvas height)
-const w = 15; //grid sq width
-const h = 15; //grid sq height
+const w = 25; //grid sq width
+const h = 25; //grid sq height
 
 var rows = canvas.height/w; //number of rows
 var columns = canvas.width/w; //number of columns
